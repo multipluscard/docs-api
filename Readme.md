@@ -6,7 +6,8 @@ são conjuntos de ferramentas, definições e protocolos para a criação de apl
 de software. APIs conectam soluções e serviços, sem a necessidade de saber como
 esses elementos foram implementados.
 
-
 ## Documentação
 
+- [Autenticação](Autenticação.md)
+- [Transação](Transação.md)
 - [Pré-Conciliação/Conciliação](Conciliação.md)
