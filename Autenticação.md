@@ -12,7 +12,8 @@ rejeitará a requisição e retornará um código de erro.
 ## Utilizando credenciais
 
 Os recursos da api são divididos em 2 categorias `Cliente` e `Representante`
-existe recursos que são exclusivos do `Cliente` e outros exclusivos do `Representante`.
+existe recursos que são exclusivos do `Cliente`, exclusivos do `Representante`
+e de ambos os tipos `Cliente` ou `Representante`.
 
 ### Cliente
 

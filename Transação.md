@@ -3,7 +3,8 @@
 ## Autenticação
 
 Para acessar os recursos descritos abaixo, é necessário estar autenticado como
-`cliente`, para maiores informações acesso o menu [Autenticação](/Autenticação.md).
+`cliente` ou `Representante`, para maiores informações acesso o menu
+[Autenticação](/Autenticação.md).
 
 ## Consultar transações
 
