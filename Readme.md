@@ -11,3 +11,4 @@ esses elementos foram implementados.
 - [Autenticação](Autenticação.md)
 - [Transação](Transação.md)
 - [Pré-Conciliação/Conciliação](Conciliação.md)
+- [PinPDV](PinPDV.md)
