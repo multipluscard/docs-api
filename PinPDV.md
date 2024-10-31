@@ -34,6 +34,27 @@ O usuário pode simplesmente realizar uma transação no PINPDV. Posteriormente,
 
 1. O fluxo para cada funcionalidade estão descritos abaixo, junto com exemplos de chamada (curl).
 
+## Códigos utilizados:
+
+### Venda Status
+    Realizada = 0,
+    Cancelada = 8,
+    Error = 9,
+
+### Pagamento Status
+    Aguardando = 0,
+    Processando = 1,
+    Concluido = 2,
+
+### Tipos de pagamento
+    None = 0,
+    Dinheiro = 1,
+    Credito = 2,
+    Debito = 3,
+    Pix = 4,
+	ValeRefeicao = 6,
+	ValeAlimentacao = 7
+
 ## Autenticação 🔐
 
 💡Será disponibilizado um token de longa duração para cada cliente (estabelecimentoId). 
@@ -386,6 +407,7 @@ curl --request GET \
 	]
 }
 ````
+
 ### Impressão
 Quando a venda for finalizada no APP PINPDV, será solicitado a impressão do documento (fiscal ou não fiscal) referente a venda. Ver explicação anterior sobre essa questão.
 
@@ -473,7 +495,7 @@ O sistema parceiro pode cancelar a solicitação enviada enquanto o PINPDV não 
 
 ````bash
 curl --request DELETE \
-  --url 'https://webapi.pinpdv.com.br/pos-venda/{id}' \
+  --url 'https://webapi.pinpdv.com.br/pos-venda/{Identificador}' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -488,7 +510,7 @@ O sistema parceiro pode consultar o status de uma solicitação enviada através
 
 ````bash
 curl --request GET \
-  --url 'https://webapi.pinpdv.com.br/pos-venda/{id}' \
+  --url 'https://webapi.pinpdv.com.br/pos-venda/{Identificador}' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -545,3 +567,7 @@ curl --request GET \
 
 ### VENDA EXPRESSA
 A captura de transação realizada no APP PINPDV através da modalidade VENDA EXPRESSA está disponível em outra API, pertencente às soluções Multiplus Card. Verifique documentação referente a “reimpressão de comprovante” (https://github.com/multipluscard/docs-api) .
+
+
+
+
