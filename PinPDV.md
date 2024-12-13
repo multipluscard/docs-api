@@ -1,4 +1,4 @@
-# Manual de integração PINPDV 👩‍💻💳📠👨‍💻
+# Manual de integração PINPDV 👩‍💻💳📱👨‍💻
 A integração do sistema parceiro  com  PINPDV ocorre através de integração com WEBAPI no padrão REST.
 
 Esse material tem como objetivo servir como guia de integração técnica, descrevendo os processos a serem executados 
@@ -100,6 +100,7 @@ curl --request GET \
   ]
 }
 ````
+
 ## Impressão de documento 📃
 No fim dos processos que permitem a impressão de documento (fiscal ou não fiscal) uma dessas abordagens deve ser adotada pelo sistema parceiro.
 
@@ -132,11 +133,12 @@ O sistema parceiro se encarrega de periodicamente monitorar as vendas realizadas
 </details>
 
 ## Atualizando documento comprovante
+
 Dependendo da escolha do sistema parceiro quanto a geração de documento, o endpoint para atualizar o conteúdo deve ser usado, considerar sempre 40 caracteres. O texto será posicionado ao centro. Não há opção de formatação. O codigo de venda é retornado na resposta da requisição anterior. Exemplo, na resposta de status da pré-venda vai constar um objeto venda e seu ID.
 
 ````bash
 curl --request POST \
-  --url 'https://webapi.pinpdv.com.br/venda/{vendaID}/comprovante' \
+  --url 'https://webapi.pinpdv.com.br/venda/{vendaIdentificador}/comprovante' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: text/plain' \
   --data '         Aviso de comprovante          '
@@ -148,6 +150,7 @@ LINHA 3'
 ````json
 202 - OK
 ````
+
 ## PRODUTOS 🥫🍟🍔
 Serão exibidos os produtos no PINPDV que estão cadastrados na API PINPDV e que estejam ativos.
 
@@ -411,7 +414,7 @@ curl --request GET \
 ### Impressão
 Quando a venda for finalizada no APP PINPDV, será solicitado a impressão do documento (fiscal ou não fiscal) referente a venda. Ver explicação anterior sobre essa questão.
 
-## POS-TEF
+## POS-TEF 💻💳
 Para iniciar uma transação no modo POS TEF deve-se escolher o equipamento que vai receber a solicitação. Para isso, deve-se listar os equipamentos que sinalizaram estar ativos. 
 
 ⚠️ Cabe ao sistema parceiro definir o critério de escolha do equipamento, já que cada 
@@ -565,9 +568,335 @@ curl --request GET \
 ````
 
 
-### VENDA EXPRESSA
-A captura de transação realizada no APP PINPDV através da modalidade VENDA EXPRESSA está disponível em outra API, pertencente às soluções Multiplus Card. Verifique documentação referente a “reimpressão de comprovante” (https://github.com/multipluscard/docs-api) .
+## VENDA EXPRESSA 📱💳
+
+Vendas realizadas no equipamento por meio da função "VENDA EXPRESSA" são possíves de consultar através da API do PINPDV
+
+### Consulta de VENDA EXPRESSA
+O sistema parceiro pode consultar as vendas realizadas no PINPDV, filtrando somente o tipo "VENDA EXPRESSA"
+
+````bash
+# OrdenarPor = (Id, Valor, Identificador, Comprovante, Status, PinPdv, TipoVenda, CadastradoEm, AtualizadoEm)
+# OrdenarTipo = (ASC, DESC)
+# DataInicial=YYYY-MM-DDTHH:MM:SS
+# DataFinal=YYYY-MM-DDTHH:MM:SS
+# PaginaNumero=1
+# QtdRegistro=100
+# Filtros (
+#       FiltroComprovante={true,false},
+#       FiltroPinPdv={Codigo}
+#       FiltroStatus={Realizada, Cancelada, Error}
+#       FiltroTipoPagamento={Credito, Debito, Pix, Crediario}
+#)
+curl --request GET \
+  --url 'https://webapi.pinpdv.com.br/venda?DataInicial=2024-12-12T00:00:00&DataFinal=2024-12-12T23:59:59&FiltroTipoVenda=Expressa' \
+  --header 'Authorization: Bearer xyz' \
+````
+↪️ Exemplo de resposta:
+````json
+200 - OK
+{
+	"paginaAtual": 1,
+	"itensPorPagina": 100,
+	"quantidadeDePaginas": 1,
+	"quantidadeTotalDeItens": 3,
+	"primeiroRegistro": 1,
+	"ultimoRegistro": 3,
+	"paginaAnterior": false,
+	"paginaProxima": false,
+	"data": [
+		{
+			"id": 1004,
+			"identificador": "035c6370b8e611ef9d282f9fae714dd9",
+			"tipoVenda": {
+				"key": 1,
+				"value": "Expressa"
+			},
+			"valor": 15.0000,
+			"comprovante": "****************************************\n*                                      *\n*             HOMOLOGAÇÃO              *\n*                                      *\n****************************************\n*                                      *\n*         ESSE DOCUMENTO NÃO           *\n*          TEM VALOR FISCAL            *\n*                                      *\n****************************************\n\nRECEBEMOS SEU PAGAMENTO:\n\n--> 035c6370b8e611ef9d282f9fae714dd9\"\n\n### VALOR: 15\n### ITENS: 0\n\n\n     RETIRE SEU DOCUMENTO FISCAL        \n      NO BALCÃO DE ATENDIMENTO          \n\n\nhttp://www.sefazexemplo.gov.br/nfce/qrcode?p=28170800156225000131650110000151341562040824|2|1|1|DC6AE2C2B9A992BE59679AC365E29922DE6B7511\n\n\n\nOBRIGADO\nVOLTE SEMPRE!\n\n",
+			"cadastradoEm": "2024-12-12T21:05:56.113478",
+			"atualizadoEm": null,
+			"status": {
+				"key": 0,
+				"value": "Realizada"
+			},
+			"transacoes": [
+				{
+					"id": 1039,
+					"valor": 15.0000,
+					"parcelas": 1,
+					"cadastradoEm": "2024-12-12T21:05:51.154713",
+					"atualizadoEm": "2024-12-12T21:05:56.115344",
+					"status": {
+						"key": 0,
+						"value": "Aprovada"
+					},
+					"tipoPagamento": 3,
+					"dados": {
+						"dataHora": "2024-12-12T21:05:51.154713",
+						"nsu": "2024121200003394",
+						"autorizacao": "001425",
+						"bandeira": "VISA",
+						"adquirente": "VERO"
+					}
+				}
+			],
+			"produtos": [],
+			"preVenda": null,
+			"posVenda": null,
+			"pinPdv": {
+				"codigo": "421730",
+				"nome": "NOME"
+			}
+		},
+		{
+			"id": 1005,
+			"identificador": "f40f5890b8e611efbb406b5cca06cb38",
+			"tipoVenda": {
+				"key": 1,
+				"value": "Expressa"
+			},
+			"valor": 3.0000,
+			"comprovante": "****************************************\n*                                      *\n*             HOMOLOGAÇÃO              *\n*                                      *\n****************************************\n*                                      *\n*         ESSE DOCUMENTO NÃO           *\n*          TEM VALOR FISCAL            *\n*                                      *\n****************************************\n\nRECEBEMOS SEU PAGAMENTO:\n\n--> f40f5890b8e611efbb406b5cca06cb38\"\n\n### VALOR: 3\n### ITENS: 0\n\n\n     RETIRE SEU DOCUMENTO FISCAL        \n      NO BALCÃO DE ATENDIMENTO          \n\n\nhttp://www.sefazexemplo.gov.br/nfce/qrcode?p=28170800156225000131650110000151341562040824|2|1|1|DC6AE2C2B9A992BE59679AC365E29922DE6B7511\n\n\n\nOBRIGADO\nVOLTE SEMPRE!\n\n",
+			"cadastradoEm": "2024-12-12T21:12:39.893618",
+			"atualizadoEm": null,
+			"status": {
+				"key": 0,
+				"value": "Realizada"
+			},
+			"transacoes": [
+				{
+					"id": 1040,
+					"valor": 3.0000,
+					"parcelas": 1,
+					"cadastradoEm": "2024-12-12T21:12:34.969081",
+					"atualizadoEm": "2024-12-12T21:12:39.896144",
+					"status": {
+						"key": 0,
+						"value": "Aprovada"
+					},
+					"tipoPagamento": 2,
+					"dados": {
+						"dataHora": "2024-12-12T21:12:34.969081",
+						"nsu": "2024121200003413",
+						"autorizacao": "002751",
+						"bandeira": "VISA",
+						"adquirente": "VERO"
+					}
+				}
+			],
+			"produtos": [],
+			"preVenda": null,
+			"posVenda": null,
+			"pinPdv": {
+				"codigo": "421730",
+				"nome": "TESTE"
+			}
+		},
+		{
+			"id": 1006,
+			"identificador": "8cf77b00b8e711efabfa4d65d86230a8",
+			"tipoVenda": {
+				"key": 1,
+				"value": "Expressa"
+			},
+			"valor": 8.0000,
+			"comprovante": "****************************************\n*                                      *\n*             HOMOLOGAÇÃO              *\n*                                      *\n****************************************\n*                                      *\n*         ESSE DOCUMENTO NÃO           *\n*          TEM VALOR FISCAL            *\n*                                      *\n****************************************\n\nRECEBEMOS SEU PAGAMENTO:\n\n--> 8cf77b00b8e711efabfa4d65d86230a8\"\n\n### VALOR: 8\n### ITENS: 0\n\n\n     RETIRE SEU DOCUMENTO FISCAL        \n      NO BALCÃO DE ATENDIMENTO          \n\n\nhttp://www.sefazexemplo.gov.br/nfce/qrcode?p=28170800156225000131650110000151341562040824|2|1|1|DC6AE2C2B9A992BE59679AC365E29922DE6B7511\n\n\n\nOBRIGADO\nVOLTE SEMPRE!\n\n",
+			"cadastradoEm": "2024-12-12T21:16:56.511982",
+			"atualizadoEm": null,
+			"status": {
+				"key": 0,
+				"value": "Realizada"
+			},
+			"transacoes": [
+				{
+					"id": 1041,
+					"valor": 8.0000,
+					"parcelas": 1,
+					"cadastradoEm": "2024-12-12T21:16:51.511809",
+					"atualizadoEm": "2024-12-12T21:16:56.514429",
+					"status": {
+						"key": 0,
+						"value": "Aprovada"
+					},
+					"tipoPagamento": 3,
+					"dados": {
+						"dataHora": "2024-12-12T21:16:51.511809",
+						"nsu": "2024121200003420",
+						"autorizacao": "003590",
+						"bandeira": "VISA",
+						"adquirente": "VERO"
+					}
+				}
+			],
+			"produtos": [],
+			"preVenda": null,
+			"posVenda": null,
+			"pinPdv": {
+				"codigo": "421730",
+				"nome": "TESTE"
+			}
+		}
+	]
+}
+````
 
 
+## CONSULTA DE VENDAS - GERAL 🔎🧾
 
+Toda venda feita no PINPDV, seja na modalidade ou status que for, é possível de ser consultada na API do PINPDV.
 
+````bash
+# OrdenarPor = (Id, Valor, Identificador, Comprovante, Status, PinPdv, TipoVenda, CadastradoEm, AtualizadoEm)
+# OrdenarTipo = (ASC, DESC)
+# DataInicial=YYYY-MM-DDTHH:MM:SS
+# DataFinal=YYYY-MM-DDTHH:MM:SS
+# PaginaNumero=1
+# QtdRegistro=100
+# Filtros (
+#       FiltroComprovante={true,false},
+#       FiltroTipoVenda={Avulsa, Expressa, PreVenda, PosVenda},
+#       FiltroPinPdv={Codigo}
+#       FiltroStatus={Realizada, Cancelada, Error}
+#       FiltroTipoPagamento={Dinheiro, Credito, Debito, Pix, Crediario}
+#)
+curl --request GET \
+  --url 'https://webapi.pinpdv.com.br/venda?DataInicial=2024-12-12T00:00:00&DataFinal=2024-12-12T23:59:59' \
+  --header 'Authorization: Bearer xyz' \
+````
+↪️ Exemplo de resposta:
+````json
+200 - OK
+{
+	"paginaAtual": 1,
+	"itensPorPagina": 100,
+	"quantidadeDePaginas": 1,
+	"quantidadeTotalDeItens": 2,
+	"primeiroRegistro": 1,
+	"ultimoRegistro": 2,
+	"paginaAnterior": false,
+	"paginaProxima": false,
+	"data": [
+		{
+			"id": 1002,
+			"identificador": "68164940b8e411efb1804576f07d30fa",
+			"tipoVenda": {
+				"key": 0,
+				"value": "Avulsa"
+			},
+			"valor": 23.0000,
+			"comprovante": "****************************************\n*                                      *\n*             HOMOLOGAÇÃO              *\n*                                      *\n****************************************\n*                                      *\n*         ESSE DOCUMENTO NÃO           *\n*          TEM VALOR FISCAL            *\n*                                      *\n****************************************\n\nRECEBEMOS SEU PAGAMENTO:\n\n--> 68164940b8e411efb1804576f07d30fa\"\n\n### VALOR: 23\n### ITENS: 2\n\n\n     RETIRE SEU DOCUMENTO FISCAL        \n      NO BALCÃO DE ATENDIMENTO          \n\n\nhttp://www.sefazexemplo.gov.br/nfce/qrcode?p=28170800156225000131650110000151341562040824|2|1|1|DC6AE2C2B9A992BE59679AC365E29922DE6B7511\n\n\n\nOBRIGADO\nVOLTE SEMPRE!\n\n",
+			"cadastradoEm": "2024-12-12T20:54:23.449928",
+			"atualizadoEm": "2024-12-12T20:54:33.783144",
+			"status": {
+				"key": 0,
+				"value": "Realizada"
+			},
+			"transacoes": [
+				{
+					"id": 1037,
+					"valor": 23.0000,
+					"parcelas": 1,
+					"cadastradoEm": "2024-12-12T20:54:23.451749",
+					"atualizadoEm": null,
+					"status": {
+						"key": 0,
+						"value": "Aprovada"
+					},
+					"tipoPagamento": 1,
+					"dados": null
+				}
+			],
+			"produtos": [
+				{
+					"id": 16,
+					"identificador": "bd11f408cc714c8eba069e8bb69a88de",
+					"nome": "Hot Dog ??",
+					"descricao": null,
+					"quantidade": 1,
+					"precoUnitario": 10.5000,
+					"precoTotal": 10.5000
+				},
+				{
+					"id": 17,
+					"identificador": "1cd99ebf09864438adbb943ed8fbdc39",
+					"nome": "Pastel",
+					"descricao": null,
+					"quantidade": 1,
+					"precoUnitario": 12.5000,
+					"precoTotal": 12.5000
+				}
+			],
+			"preVenda": null,
+			"posVenda": null,
+			"pinPdv": {
+				"codigo": "421730",
+				"nome": "TESTE"
+			}
+		},
+		{
+			"id": 1003,
+			"identificador": "32d312d0b8e511efb0c5abe3013abda6",
+			"tipoVenda": {
+				"key": 0,
+				"value": "Avulsa"
+			},
+			"valor": 21.2500,
+			"comprovante": "****************************************\n*                                      *\n*             HOMOLOGAÇÃO              *\n*                                      *\n****************************************\n*                                      *\n*         ESSE DOCUMENTO NÃO           *\n*          TEM VALOR FISCAL            *\n*                                      *\n****************************************\n\nRECEBEMOS SEU PAGAMENTO:\n\n--> 32d312d0b8e511efb0c5abe3013abda6\"\n\n### VALOR: 21.25\n### ITENS: 2\n\n\n     RETIRE SEU DOCUMENTO FISCAL        \n      NO BALCÃO DE ATENDIMENTO          \n\n\nhttp://www.sefazexemplo.gov.br/nfce/qrcode?p=28170800156225000131650110000151341562040824|2|1|1|DC6AE2C2B9A992BE59679AC365E29922DE6B7511\n\n\n\nOBRIGADO\nVOLTE SEMPRE!\n\n",
+			"cadastradoEm": "2024-12-12T21:00:02.583575",
+			"atualizadoEm": "2024-12-12T21:00:07.908576",
+			"status": {
+				"key": 0,
+				"value": "Realizada"
+			},
+			"transacoes": [
+				{
+					"id": 1038,
+					"valor": 21.2500,
+					"parcelas": 1,
+					"cadastradoEm": "2024-12-12T21:00:01.151783",
+					"atualizadoEm": "2024-12-12T21:00:02.585883",
+					"status": {
+						"key": 0,
+						"value": "Aprovada"
+					},
+					"tipoPagamento": 2,
+					"dados": {
+						"dataHora": "2024-12-12T21:00:01.151783",
+						"nsu": "2024121200003377",
+						"autorizacao": "000279",
+						"bandeira": "VISA",
+						"adquirente": "VERO"
+					}
+				}
+			],
+			"produtos": [
+				{
+					"id": 17,
+					"identificador": "1cd99ebf09864438adbb943ed8fbdc39",
+					"nome": "Pastel",
+					"descricao": null,
+					"quantidade": 1,
+					"precoUnitario": 12.5000,
+					"precoTotal": 12.5000
+				},
+				{
+					"id": 41,
+					"identificador": "4c6b53be5cff45b0b3a17b654a7e76c0",
+					"nome": "Coca Cola Lata 350ml",
+					"descricao": null,
+					"quantidade": 1,
+					"precoUnitario": 8.7500,
+					"precoTotal": 8.7500
+				}
+			],
+			"preVenda": null,
+			"posVenda": null,
+			"pinPdv": {
+				"codigo": "421730",
+				"nome": "TESTE"
+			}
+		}
+	]
+}
+````
