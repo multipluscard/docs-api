@@ -137,7 +137,7 @@ O sistema parceiro se encarrega de periodicamente monitorar as vendas realizadas
 Dependendo da escolha do sistema parceiro quanto a geração de documento, o endpoint para atualizar o conteúdo deve ser usado, considerar sempre 40 caracteres. O texto será posicionado ao centro. Não há opção de formatação. O codigo de venda é retornado na resposta da requisição anterior. Exemplo, na resposta de status da pré-venda vai constar um objeto venda e seu ID.
 
 ````bash
-curl --request POST \
+curl --request PUT \
   --url 'https://webapi.pinpdv.com.br/venda/{vendaIdentificador}/comprovante' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: text/plain' \
