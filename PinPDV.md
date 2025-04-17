@@ -278,7 +278,7 @@ curl --request POST \
     "Descricao": "teste 1",
     "Parcelas": 1,
     "TipoPagamento": 3,
-	"PinPdvId": {pinpdvId},
+    "PinPdvId": {pinpdvId},
     "Produtos": [
         {
             "Identificador": "{identificadorProduto}",
