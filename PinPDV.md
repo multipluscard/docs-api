@@ -265,7 +265,7 @@ Quando a venda for finalizada no APP PINPDV, será solicitado a impressão do do
 Serão exibidas as pré-vendas no PINPDV que foram cadastrados na API PINPDV e que não estejam concluídas.
 
 ### Cadastro
-O cadastro das pré-vendas é feito no endpoint /pre-venda passando o ID da empresa. É obrigatório passar o tipo de pagamento, parcela e produtos.
+O cadastro das pré-vendas é feito no endpoint /pre-venda passando o ID da empresa. É opcional passar o tipo de pagamento (TipoPagamento), parcela (Parcelas) e produtos (Produtos).
 
 ````bash
 curl --request POST \
