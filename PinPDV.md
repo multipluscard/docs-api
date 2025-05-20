@@ -400,10 +400,16 @@ curl --request GET \
 						"autorizacao": "164550",
 						"bandeira": "MASTERCARD",
 						"adquirente": "GETNET"
+					},
+					"adicional": {
+						"nome": "Nome",
+						"telefone": null,
+						"documento": null
 					}
 				}
 			],
 			"pinPdv": {
+				"id": 1,
 				"codigo": "526989",
 				"nome": "CAIXA 01"
 			}
@@ -556,10 +562,16 @@ curl --request GET \
 						"autorizacao": "164550",
 						"bandeira": "MASTERCARD",
 						"adquirente": "GETNET"
+					},
+					"adicional": {
+						"nome": "Nome",
+						"telefone": null,
+						"documento": null
 					}
 				}
 			],
 			"pinPdv": {
+				"id": 1,
 				"codigo": "526989",
 				"nome": "CAIXA01"
 			}
@@ -639,6 +651,11 @@ curl --request GET \
 						"autorizacao": "001425",
 						"bandeira": "VISA",
 						"adquirente": "VERO"
+					},
+					"adicional": {
+						"nome": "Nome",
+						"telefone": null,
+						"documento": null
 					}
 				}
 			],
@@ -646,6 +663,7 @@ curl --request GET \
 			"preVenda": null,
 			"posVenda": null,
 			"pinPdv": {
+				"id": 1,
 				"codigo": "421730",
 				"nome": "NOME"
 			}
@@ -683,6 +701,11 @@ curl --request GET \
 						"autorizacao": "002751",
 						"bandeira": "VISA",
 						"adquirente": "VERO"
+					},
+					"adicional": {
+						"nome": "Nome",
+						"telefone": null,
+						"documento": null
 					}
 				}
 			],
@@ -690,6 +713,7 @@ curl --request GET \
 			"preVenda": null,
 			"posVenda": null,
 			"pinPdv": {
+				"id": 1,
 				"codigo": "421730",
 				"nome": "TESTE"
 			}
@@ -727,6 +751,11 @@ curl --request GET \
 						"autorizacao": "003590",
 						"bandeira": "VISA",
 						"adquirente": "VERO"
+					},
+					"adicional": {
+						"nome": "Nome",
+						"telefone": null,
+						"documento": null
 					}
 				}
 			],
@@ -734,6 +763,7 @@ curl --request GET \
 			"preVenda": null,
 			"posVenda": null,
 			"pinPdv": {
+				"id": 1,
 				"codigo": "421730",
 				"nome": "TESTE"
 			}
@@ -805,7 +835,8 @@ curl --request GET \
 						"value": "Aprovada"
 					},
 					"tipoPagamento": 1,
-					"dados": null
+					"dados": null,
+					"adicional": null
 				}
 			],
 			"produtos": [
@@ -831,6 +862,7 @@ curl --request GET \
 			"preVenda": null,
 			"posVenda": null,
 			"pinPdv": {
+				"id": 1,
 				"codigo": "421730",
 				"nome": "TESTE"
 			}
@@ -868,6 +900,11 @@ curl --request GET \
 						"autorizacao": "000279",
 						"bandeira": "VISA",
 						"adquirente": "VERO"
+					},
+					"adicional": {
+						"nome": "Nome",
+						"telefone": null,
+						"documento": null
 					}
 				}
 			],
@@ -894,6 +931,7 @@ curl --request GET \
 			"preVenda": null,
 			"posVenda": null,
 			"pinPdv": {
+				"id": 1,
 				"codigo": "421730",
 				"nome": "TESTE"
 			}
