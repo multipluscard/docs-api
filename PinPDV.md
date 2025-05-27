@@ -6,16 +6,16 @@ Esse material tem como objetivo servir como guia de integração técnica, descr
 ## Principais funcionalidades:
 O **PINPDV Lite** possui quatro principais funcionalidades:
 
-- **PRODUTOS**: Venda de produtos iniciada pelo PINPDV 
+- **PRODUTOS**: Venda de produtos iniciada pelo PINPDV  
 A partir de produtos previamente cadastrados na base da API PINPDV o usuário pode fazer a venda e imprimir o documento (fiscal ou não fiscal) referente a venda, uma vez que o mesmo for gerado pela sistema parceiro.
 
-- **PRÉ-VENDA**: Venda de produtos iniciada pelo sistema parceiro 
+- **PRÉ-VENDA**: Venda de produtos iniciada pelo sistema parceiro  
 A partir do cadastro de uma pré-venda iniciada pelo sistema do parceiro, o usuário pode finalizar o pagamento mediante a forma de pagamento solicitada e imprimir o documento (fiscal ou não fiscal) referente a venda.
 
-- **POS TEF**: Captura simples de transação iniciada pelo sistema parceiro 
+- **POS TEF**: Captura simples de transação iniciada pelo sistema parceiro  
 O sistema pode solicitar a captura de transação mediante parâmetros específicos. As informações de pagamento são disponibilizadas para o sistema durante e no final do processo.
 
-- **VENDA EXPRESSA**: Captura de transação iniciada pelo PINDV 
+- **VENDA EXPRESSA**: Captura de transação iniciada pelo PINDV  
 O usuário pode simplesmente realizar uma transação no PINPDV. Posteriormente, o sistema integrador pode ter acesso aos dados dessa transação.
 
 ## Importante 🚨
@@ -52,8 +52,8 @@ O usuário pode simplesmente realizar uma transação no PINPDV. Posteriormente,
     Credito = 2,
     Debito = 3,
     Pix = 4,
-	ValeRefeicao = 6,
-	ValeAlimentacao = 7
+    ValeRefeicao = 6,
+    ValeAlimentacao = 7
 
 ## Autenticação 🔐
 
@@ -141,10 +141,7 @@ curl --request PUT \
   --url 'https://webapi.pinpdv.com.br/venda/{vendaIdentificador}/comprovante' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: text/plain' \
-  --data '         Aviso de comprovante          '
-LINHA 1                                 
-                                 LINHA 2
-LINHA 3'
+  --data $'         Aviso de comprovante          \nLINHA 1\nLINHA 2\nLINHA 3'
 ````
 ↪️ Exemplo de resposta:
 ````json
@@ -160,7 +157,7 @@ O cadastro dos produtos é feito no endpoint /produto passando o ID da empresa.
 ````bash
 curl --request POST \
   --url 'https://webapi.pinpdv.com.br/produto' \
-  --header 'Authorization: Bearer XYZ' \
+  --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json' \
   --data '[
     {
@@ -194,7 +191,7 @@ O Atualizar do produto é feito no endpoint /produto passando o ID da empresa.
 ````bash
 curl --request PUT \
   --url 'https://webapi.pinpdv.com.br/produto' \
-  --header 'Authorization: Bearer XYZ' \
+  --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json' \
   --data '{
 	"Identificador": "cod1",
@@ -250,7 +247,7 @@ curl --request PUT \
 ````bash
 curl --request DELETE \
   --url 'https://webapi.pinpdv.com.br/produto/{Identificador}' \
-  --header 'Authorization: Bearer XYZ' \
+  --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json'
 ````
 ↪️ Exemplo de resposta:
@@ -265,7 +262,7 @@ Quando a venda for finalizada no APP PINPDV, será solicitado a impressão do do
 Serão exibidas as pré-vendas no PINPDV que foram cadastrados na API PINPDV e que não estejam concluídas.
 
 ### Cadastro
-O cadastro das pré-vendas é feito no endpoint /pre-venda passando o ID da empresa. É opcional passar o tipo de pagamento (TipoPagamento), parcela (Parcelas) e produtos (Produtos).
+O cadastro das pré-vendas é feito no endpoint /pre-venda passando o ID da empresa. É opcional passar o tipo de pagamento (TipoPagamento), parcela (Parcelas), produtos (Produtos) e dispositivo (PinPdvId).
 
 ````bash
 curl --request POST \
@@ -418,6 +415,19 @@ curl --request GET \
 }
 ````
 
+### Abortar solicitação
+O sistema parceiro pode cancelar a solicitação enviada enquanto o PINPDV não iniciar a transação. É utilizado o endpoint /pos-venda
+
+````bash
+curl --request DELETE \
+  --url 'https://webapi.pinpdv.com.br/pre-venda/{identificadorSistema}' \
+  --header 'Authorization: Bearer xyz' \
+````
+↪️ Exemplo de resposta:
+````json
+202 - OK
+````
+
 ### Impressão
 Quando a venda for finalizada no APP PINPDV, será solicitado a impressão do documento (fiscal ou não fiscal) referente a venda. Ver explicação anterior sobre essa questão.
 
@@ -478,7 +488,7 @@ O cadastro da solicitação é feito no endpoint /pos-venda.
 
 ````bash
 curl --request POST \
-  --url 'https://webapi.pinpdv.com.br/pos-venda \
+  --url 'https://webapi.pinpdv.com.br/pos-venda' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -495,7 +505,8 @@ curl --request POST \
 200 - OK
 
 {
-	"id": 61239
+	"id": 61239,
+	"identificador": "vendaCf981239a"
 }
 ````
 
@@ -576,7 +587,12 @@ curl --request GET \
 				"nome": "CAIXA01"
 			}
 		}
-	]
+	],
+	"pinPdv": {
+		"id": 1,
+		"codigo": "526989",
+		"nome": "CAIXA01"
+	}
 }
 ````
 
