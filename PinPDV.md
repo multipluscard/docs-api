@@ -34,6 +34,43 @@ O usuário pode simplesmente realizar uma transação no PINPDV. Posteriormente,
 
 1. O fluxo para cada funcionalidade estão descritos abaixo, junto com exemplos de chamada (curl).
 
+
+## 🔄 Alteração da URL de Integração
+
+Estamos atualizando a URL base utilizada para integração com a nossa API. 
+Fique atento ao prazo de transição para garantir que seu sistema continue 
+funcionando corretamente.
+
+- **Até 06/07/2025** (inclusive):
+  ```bash
+  # Utilize a seguinte URL:
+  https://webapi.pinpdv.com.br
+  ```
+
+
+- **A partir de 07/07/2025**:
+  ```bash
+  #  A nova URL a ser utilizada é:
+  https://api.pinpdv.com.br
+  ```
+
+## ⚠️ Atenção: Novos Campos nos Retornos JSON
+
+Em futuras atualizações da API, **novos campos poderão ser adicionados** nos retornos JSON, com o objetivo de evoluir 
+e enriquecer as funcionalidades disponíveis.
+
+### 🧩 Boas Práticas
+
+Para garantir que sua aplicação continue funcionando corretamente mesmo com a adição de **novos campos nos retornos JSON**, 
+não faça validação rígida de estrutura nos objetos JSON recebidos **Ignore campos desconhecidos**  ou adicionais que não 
+são utilizados no seu sistema. 
+Certifique-se de que o parser de JSON utilizado esteja configurado para **aceitar campos extras** sem erro.
+
+### ✅ Benefícios
+- Maior resiliência da aplicação frente a mudanças evolutivas.
+- Redução de falhas em ambientes de produção.
+- Compatibilidade futura sem necessidade de ajustes imediatos.
+
 ## Códigos utilizados:
 
 ### Venda Status
@@ -69,7 +106,7 @@ Para algumas requisições é necessário enviar o código de empresa. Esse cód
 # OrdenarTipo = (ASC, DESC)
 
 curl --request GET \
-  --url https://webapi.pinpdv.com.br/empresa?OrdenarPor=Id&OrdenarTipo=DESC \
+  --url {URL}/empresa?OrdenarPor=Id&OrdenarTipo=DESC \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -138,7 +175,7 @@ Dependendo da escolha do sistema parceiro quanto a geração de documento, o end
 
 ````bash
 curl --request PUT \
-  --url 'https://webapi.pinpdv.com.br/venda/{vendaIdentificador}/comprovante' \
+  --url '{URL}/venda/{vendaIdentificador}/comprovante' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: text/plain' \
   --data $'         Aviso de comprovante          \nLINHA 1\nLINHA 2\nLINHA 3'
@@ -156,7 +193,7 @@ O cadastro dos produtos é feito no endpoint /produto passando o ID da empresa.
 
 ````bash
 curl --request POST \
-  --url 'https://webapi.pinpdv.com.br/produto' \
+  --url '{URL}/produto' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json' \
   --data '[
@@ -190,7 +227,7 @@ O Atualizar do produto é feito no endpoint /produto passando o ID da empresa.
 
 ````bash
 curl --request PUT \
-  --url 'https://webapi.pinpdv.com.br/produto' \
+  --url '{URL}/produto' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -222,7 +259,7 @@ curl --request PUT \
 
 ````bash
 curl --request PUT \
-  --url 'https://webapi.pinpdv.com.br/produto/{Identificador}/desativar' \
+  --url '{URL}/produto/{Identificador}/desativar' \
   --header 'Authorization: Bearer xyz' \
 ```` 
 ↪️ Exemplo de resposta:
@@ -235,7 +272,7 @@ curl --request PUT \
 
 ````bash
 curl --request PUT \
-  --url 'https://webapi.pinpdv.com.br/produto/{Identificador}/ativar' \
+  --url '{URL}/produto/{Identificador}/ativar' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -246,7 +283,7 @@ curl --request PUT \
 ### Deletar produto
 ````bash
 curl --request DELETE \
-  --url 'https://webapi.pinpdv.com.br/produto/{Identificador}' \
+  --url '{URL}/produto/{Identificador}' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json'
 ````
@@ -266,7 +303,7 @@ O cadastro das pré-vendas é feito no endpoint /pre-venda passando o ID da empr
 
 ````bash
 curl --request POST \
-  --url 'https://webapi.pinpdv.com.br/pre-venda' \
+  --url '{URL}/pre-venda' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -300,7 +337,7 @@ O sistema parceiro pode consultar o status de uma pré-venda enviada através do
 
 ````bash
 curl --request GET \
-  --url 'https://webapi.pinpdv.com.br/pre-venda/{identificadorSistema}' \
+  --url '{URL}/pre-venda/{identificadorSistema}' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta (Aguardando):
@@ -420,7 +457,7 @@ O sistema parceiro pode cancelar a solicitação enviada enquanto o PINPDV não 
 
 ````bash
 curl --request DELETE \
-  --url 'https://webapi.pinpdv.com.br/pre-venda/{identificadorSistema}' \
+  --url '{URL}/pre-venda/{identificadorSistema}' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -444,7 +481,7 @@ Para listar os PINPDVS disponíveis deve ser usado o endpoint /pinpdv
 
 ````bash
 curl --request GET \
-  --url 'https://webapi.pinpdv.com.br/pinpdv' \
+  --url '{URL}/pinpdv' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -488,7 +525,7 @@ O cadastro da solicitação é feito no endpoint /pos-venda.
 
 ````bash
 curl --request POST \
-  --url 'https://webapi.pinpdv.com.br/pos-venda' \
+  --url '{URL}/pos-venda' \
   --header 'Authorization: Bearer xyz' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -516,7 +553,7 @@ O sistema parceiro pode cancelar a solicitação enviada enquanto o PINPDV não 
 
 ````bash
 curl --request DELETE \
-  --url 'https://webapi.pinpdv.com.br/pos-venda/{Identificador}' \
+  --url '{URL}/pos-venda/{Identificador}' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -531,7 +568,7 @@ O sistema parceiro pode consultar o status de uma solicitação enviada através
 
 ````bash
 curl --request GET \
-  --url 'https://webapi.pinpdv.com.br/pos-venda/{Identificador}' \
+  --url '{URL}/pos-venda/{Identificador}' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -618,7 +655,7 @@ O sistema parceiro pode consultar as vendas realizadas no PINPDV, filtrando some
 #       FiltroTipoPagamento={Credito, Debito, Pix, Crediario}
 #)
 curl --request GET \
-  --url 'https://webapi.pinpdv.com.br/venda?DataInicial=2024-12-12T00:00:00&DataFinal=2024-12-12T23:59:59&FiltroTipoVenda=Expressa' \
+  --url '{URL}/venda?DataInicial=2024-12-12T00:00:00&DataFinal=2024-12-12T23:59:59&FiltroTipoVenda=Expressa' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
@@ -808,7 +845,7 @@ Toda venda feita no PINPDV, seja na modalidade ou status que for, é possível d
 #       FiltroTipoPagamento={Dinheiro, Credito, Debito, Pix, Crediario}
 #)
 curl --request GET \
-  --url 'https://webapi.pinpdv.com.br/venda?DataInicial=2024-12-12T00:00:00&DataFinal=2024-12-12T23:59:59' \
+  --url '{URL}/venda?DataInicial=2024-12-12T00:00:00&DataFinal=2024-12-12T23:59:59' \
   --header 'Authorization: Bearer xyz' \
 ````
 ↪️ Exemplo de resposta:
